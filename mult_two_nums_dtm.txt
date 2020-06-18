@@ -1,0 +1,290 @@
+//initial state
+init.getToSecondNum
+//blank character
+b
+
+//***************************************
+//***************************************
+// SPECIAL INITIAL CASES
+//***************************************
+//***************************************
+//first, get to the second num
+init.getToSecondNum, 0, init.getToSecondNum, 0, r
+init.getToSecondNum, 1, init.getToSecondNum, 1, r
+init.getToSecondNum, #, init.checkForZero, #, r
+
+//second, walk through the second num, checking to see if it equals 0
+init.checkForZero, 0, init.checkForZero, 0, r
+init.checkForZero, 1, init.createHelperNum.walk, 1, l
+init.checkForZero, b, init.multByZero.goToFirstNum, b, l
+
+//if the second num is indeed 0, then get back to the first num and
+//set all of its digits to zero, then we are done
+init.multByZero.goToFirstNum, 0, init.multByZero.goToFirstNum, 0, l
+init.multByZero.goToFirstNum, #, init.multByZero.zeroOutFirstNum, #, l
+init.multByZero.zeroOutFirstNum, 0, init.multByZero.zeroOutFirstNum, 0, l
+init.multByZero.zeroOutFirstNum, 1, init.multByZero.zeroOutFirstNum, 0, l
+init.multByZero.zeroOutFirstNum, b, done, b, r
+
+//**************************
+// INITIALIZE HELPER NUMBER
+//**************************
+
+//initialize a third, helper number to 0, just to the left of the first number on the tape
+init.createHelperNum.walk, 0, init.createHelperNum.walk, 0, l
+init.createHelperNum.walk, 1, init.createHelperNum.walk, 1, l
+init.createHelperNum.walk, #, init.createHelperNum.walk, #, l
+init.createHelperNum.walk, b, init.createHelperNum.setZero, &, l
+
+init.createHelperNum.setZero, b, init.createHelperNum.initialCheckWalk, 0, r
+
+//add num 1 to helper num, setting num 1 to zero in the process
+
+//walk to end of num 1 to check whether it is already 0
+init.createHelperNum.initialCheckWalk, 0, init.createHelperNum.initialCheckWalk, 0, r
+init.createHelperNum.initialCheckWalk, 1, init.createHelperNum.initialCheckWalk, 1, r
+init.createHelperNum.initialCheckWalk, &, init.createHelperNum.initialCheckWalk, &, r
+init.createHelperNum.initialCheckWalk, #, init.createHelperNum.checkIfDone, #, l
+
+//add 1 to helper num
+init.createHelperNum.walkRight, 0, init.createHelperNum.walkRight, 0, r
+init.createHelperNum.walkRight, 1, init.createHelperNum.walkRight, 1, r
+init.createHelperNum.walkRight, &, init.createHelperNum.walkLeft, &, l
+init.createHelperNum.walkLeft, 0, init.createHelperNum.getToNumOne, 1, r
+init.createHelperNum.walkLeft, 1, init.createHelperNum.walkLeft, 0, l
+init.createHelperNum.walkLeft, b, init.createHelperNum.getToNumOne, 1, r
+
+init.createHelperNum.getToNumOne, 0, init.createHelperNum.getToNumOne, 0, r
+init.createHelperNum.getToNumOne, 1, init.createHelperNum.getToNumOne, 1, r
+init.createHelperNum.getToNumOne, &, init.createHelperNum.firstOnesComp, &, r
+
+//subtract one from the num 1
+init.createHelperNum.firstOnesComp, 0, init.createHelperNum.firstOnesComp, 1, r
+init.createHelperNum.firstOnesComp, 1, init.createHelperNum.firstOnesComp, 0, r
+init.createHelperNum.firstOnesComp, #, init.createHelperNum.subAddOne, #, l
+init.createHelperNum.subAddOne, 0, init.createHelperNum.subWalkLeft, 1, l
+init.createHelperNum.subAddOne, 1, init.createHelperNum.subAddOne, 0, l
+init.createHelperNum.subAddOne, &, init.createHelperNum.subWalkLeft, &, l
+init.createHelperNum.subWalkLeft, 0, init.createHelperNum.subWalkLeft, 0, l
+init.createHelperNum.subWalkLeft, 1, init.createHelperNum.subWalkLeft, 1, l
+init.createHelperNum.subWalkLeft, &, init.createHelperNum.secondOnesComp, &, r
+init.createHelperNum.secondOnesComp, 0, init.createHelperNum.secondOnesComp, 1, r
+init.createHelperNum.secondOnesComp, 1, init.createHelperNum.secondOnesComp, 0, r
+init.createHelperNum.secondOnesComp, #, init.createHelperNum.checkIfDone, #, l
+
+//check if done adding num 1 to helper num
+init.createHelperNum.checkIfDone, 0, init.createHelperNum.checkIfDone, 0, l
+init.createHelperNum.checkIfDone, 1, init.createHelperNum.reset, 1, l
+init.createHelperNum.checkIfDone, &, init.createFinalNum.walkLeft, &, r
+init.createHelperNum.reset, 0, init.createHelperNum.reset, 0, l
+init.createHelperNum.reset, 1, init.createHelperNum.reset, 1, l
+init.createHelperNum.reset, &, init.createHelperNum.walkLeft, &, l
+
+//**************************
+// INITIALIZE FINAL ANSWER
+//**************************
+
+init.createFinalNum.walkLeft, 0, init.createFinalNum.walkLeft, 0, l
+init.createFinalNum.walkLeft, 1, init.createFinalNum.walkLeft, 1, l
+init.createFinalNum.walkLeft, &, init.createFinalNum.walkLeft, &, l
+init.createFinalNum.walkLeft, b, init.createFinalNum.setToZero, |, l
+
+init.createFinalNum.setToZero, b, main.addUsingHelper.initialCheckWalk, 0, r
+
+//****************************************************
+//****************************************************
+// MAIN ALGORITHM
+//****************************************************
+//****************************************************
+
+//******************************************************************************
+//add helper num to final num and to num 1, setting helper num to zero in the process
+//******************************************************************************
+
+//walk to end of helper num to check whether it is already 0
+main.addUsingHelper.initialCheckWalk, 0, main.addUsingHelper.initialCheckWalk, 0, r
+main.addUsingHelper.initialCheckWalk, 1, main.addUsingHelper.initialCheckWalk, 1, r
+main.addUsingHelper.initialCheckWalk, |, main.addUsingHelper.initialCheckWalk, |, r
+main.addUsingHelper.initialCheckWalk, &, main.addUsingHelper.checkIfDone, &, l
+
+//add 1 to final num
+main.addUsingHelper.finalWalkRight, 0, main.addUsingHelper.finalWalkRight, 0, r
+main.addUsingHelper.finalWalkRight, 1, main.addUsingHelper.finalWalkRight, 1, r
+main.addUsingHelper.finalWalkRight, |, main.addUsingHelper.finalWalkLeft, |, l
+main.addUsingHelper.finalWalkLeft, 0, main.addUsingHelper.getToNumOne, 1, r
+main.addUsingHelper.finalWalkLeft, 1, main.addUsingHelper.finalWalkLeft, 0, l
+main.addUsingHelper.finalWalkLeft, b, main.addUsingHelper.getToNumOne, 1, r
+
+// walk to num 1
+main.addUsingHelper.getToNumOne, 0, main.addUsingHelper.getToNumOne, 0, r
+main.addUsingHelper.getToNumOne, 1, main.addUsingHelper.getToNumOne, 1, r
+main.addUsingHelper.getToNumOne, |, main.addUsingHelper.getToNumOne, |, r
+main.addUsingHelper.getToNumOne, &, main.addUsingHelper.numOneWalkRight, &, r
+
+//add 1 to num 1
+main.addUsingHelper.numOneWalkRight, 0, main.addUsingHelper.numOneWalkRight, 0, r
+main.addUsingHelper.numOneWalkRight, 1, main.addUsingHelper.numOneWalkRight, 1, r
+main.addUsingHelper.numOneWalkRight, #, main.addUsingHelper.numOneWalkLeft, #, l
+main.addUsingHelper.numOneWalkLeft, 0, main.addUsingHelper.getToHelperNum, 1, l
+main.addUsingHelper.numOneWalkLeft, 1, main.addUsingHelper.numOneWalkLeft, 0, l
+main.addUsingHelper.numOneWalkLeft, &, main.addUsingHelper.getToHelperNum, 1, l
+
+//walk to helper num
+main.addUsingHelper.getToHelperNum, 0, main.addUsingHelper.getToHelperNum, 0, l
+main.addUsingHelper.getToHelperNum, 1, main.addUsingHelper.getToHelperNum, 1, l
+main.addUsingHelper.getToHelperNum, &, main.addUsingHelper.getToHelperNum, &, l
+main.addUsingHelper.getToHelperNum, |, main.addUsingHelper.firstOnesComp, |, r
+
+//subtract one from helper num
+main.addUsingHelper.firstOnesComp, 0, main.addUsingHelper.firstOnesComp, 1, r
+main.addUsingHelper.firstOnesComp, 1, main.addUsingHelper.firstOnesComp, 0, r
+main.addUsingHelper.firstOnesComp, &, main.addUsingHelper.subAddOne, &, l
+main.addUsingHelper.subAddOne, 0, main.addUsingHelper.subWalkLeft, 1, l
+main.addUsingHelper.subAddOne, 1, main.addUsingHelper.subAddOne, 0, l
+main.addUsingHelper.subAddOne, |, main.addUsingHelper.subWalkLeft, |, l
+main.addUsingHelper.subWalkLeft, 0, main.addUsingHelper.subWalkLeft, 0, l
+main.addUsingHelper.subWalkLeft, 1, main.addUsingHelper.subWalkLeft, 1, l
+main.addUsingHelper.subWalkLeft, |, main.addUsingHelper.secondOnesComp, |, r
+main.addUsingHelper.secondOnesComp, 0, main.addUsingHelper.secondOnesComp, 1, r
+main.addUsingHelper.secondOnesComp, 1, main.addUsingHelper.secondOnesComp, 0, r
+main.addUsingHelper.secondOnesComp, &, main.addUsingHelper.checkIfDone, &, l
+
+//check if done adding helper num to final num and num 1
+main.addUsingHelper.checkIfDone, 0, main.addUsingHelper.checkIfDone, 0, l
+main.addUsingHelper.checkIfDone, 1, main.addUsingHelper.reset, 1, l
+main.addUsingHelper.checkIfDone, |, main.addUsingHelper.walkToNumTwo, |, r
+main.addUsingHelper.reset, 0, main.addUsingHelper.reset, 0, l
+main.addUsingHelper.reset, 1, main.addUsingHelper.reset, 1, l
+main.addUsingHelper.reset, |, main.addUsingHelper.finalWalkLeft, |, l
+
+//******************************************************************************
+//subtract 1 from num 2
+//******************************************************************************
+
+//walk to num 2
+main.addUsingHelper.walkToNumTwo, 0, main.addUsingHelper.walkToNumTwo, 0, r
+main.addUsingHelper.walkToNumTwo, 1, main.addUsingHelper.walkToNumTwo, 1, r
+main.addUsingHelper.walkToNumTwo, &, main.addUsingHelper.walkToNumTwo, &, r
+main.addUsingHelper.walkToNumTwo, #, main.addUsingHelper.numTwoFirstOnesComp, #, r
+
+//subtract one from num 2
+main.addUsingHelper.numTwoFirstOnesComp, 0, main.addUsingHelper.numTwoFirstOnesComp, 1, r
+main.addUsingHelper.numTwoFirstOnesComp, 1, main.addUsingHelper.numTwoFirstOnesComp, 0, r
+main.addUsingHelper.numTwoFirstOnesComp, b, main.addUsingHelper.numTwoSubAddOne, b, l
+main.addUsingHelper.numTwoSubAddOne, 0, main.addUsingHelper.numTwoSubWalkLeft, 1, l
+main.addUsingHelper.numTwoSubAddOne, 1, main.addUsingHelper.numTwoSubAddOne, 0, l
+main.addUsingHelper.numTwoSubAddOne, #, main.addUsingHelper.numTwoSubWalkLeft, #, l
+main.addUsingHelper.numTwoSubWalkLeft, 0, main.addUsingHelper.numTwoSubWalkLeft, 0, l
+main.addUsingHelper.numTwoSubWalkLeft, 1, main.addUsingHelper.numTwoSubWalkLeft, 1, l
+main.addUsingHelper.numTwoSubWalkLeft, #, main.addUsingHelper.numTwoSecondOnesComp, #, r
+main.addUsingHelper.numTwoSecondOnesComp, 0, main.addUsingHelper.numTwoSecondOnesComp, 1, r
+main.addUsingHelper.numTwoSecondOnesComp, 1, main.addUsingHelper.numTwoSecondOnesComp, 0, r
+main.addUsingHelper.numTwoSecondOnesComp, b, main.addUsingHelper.checkIfNumTwoIsZero, b, l
+
+//******************************************************************************
+//check if num 2 is 0 and, if so, we are done
+//******************************************************************************
+
+//check if num 2 is 0
+main.addUsingHelper.checkIfNumTwoIsZero, 0, main.addUsingHelper.checkIfNumTwoIsZero, 0, l
+main.addUsingHelper.checkIfNumTwoIsZero, 1, main.addUsingHelper.walkBackToNumOne, 1, l
+main.addUsingHelper.checkIfNumTwoIsZero, #, done, #, l
+
+//walk to num 1 if not done
+main.addUsingHelper.walkBackToNumOne, 0, main.addUsingHelper.walkBackToNumOne, 0, l
+main.addUsingHelper.walkBackToNumOne, 1, main.addUsingHelper.walkBackToNumOne, 1, l
+main.addUsingHelper.walkBackToNumOne, #, main.addUsingNumOne.checkIfDone, #, l
+
+//******************************************************************************
+//add num 1 to final num and to helper num, setting num 1 to zero in the process
+//******************************************************************************
+
+//walk to end of num 1 to check whether it is already 0
+main.addUsingNumOne.initialCheckWalk, 0, main.addUsingNumOne.initialCheckWalk, 0, r
+main.addUsingNumOne.initialCheckWalk, 1, main.addUsingNumOne.initialCheckWalk, 1, r
+main.addUsingNumOne.initialCheckWalk, &, main.addUsingNumOne.initialCheckWalk, &, r
+main.addUsingNumOne.initialCheckWalk, #, main.addUsingNumOne.checkIfDone, #, l
+
+//add 1 to helper num
+main.addUsingNumOne.helperWalkRight, 0, main.addUsingNumOne.helperWalkRight, 0, r
+main.addUsingNumOne.helperWalkRight, 1, main.addUsingNumOne.helperWalkRight, 1, r
+main.addUsingNumOne.helperWalkRight, &, main.addUsingNumOne.helperWalkLeft, &, l
+main.addUsingNumOne.helperWalkLeft, 0, main.addUsingNumOne.walkToFinalNum, 1, l
+main.addUsingNumOne.helperWalkLeft, 1, main.addUsingNumOne.helperWalkLeft, 0, l
+main.addUsingNumOne.helperWalkLeft, |, main.addUsingNumOne.walkToFinalNum, |, l
+
+//walk to final num
+main.addUsingNumOne.walkToFinalNum, 0, main.addUsingNumOne.walkToFinalNum, 0, l
+main.addUsingNumOne.walkToFinalNum, 1, main.addUsingNumOne.walkToFinalNum, 1, l
+main.addUsingNumOne.walkToFinalNum, |, main.addUsingNumOne.finalWalkLeft, |, l
+
+//add 1 to final num
+main.addUsingNumOne.finalWalkLeft, 0, main.addUsingNumOne.walkToNumOne, 1, r
+main.addUsingNumOne.finalWalkLeft, 1, main.addUsingNumOne.finalWalkLeft, 0, l
+main.addUsingNumOne.finalWalkLeft, b, main.addUsingNumOne.walkToNumOne, 1, r
+
+//walk to num 1
+main.addUsingNumOne.walkToNumOne, 0, main.addUsingNumOne.walkToNumOne, 0, r
+main.addUsingNumOne.walkToNumOne, 1, main.addUsingNumOne.walkToNumOne, 1, r
+main.addUsingNumOne.walkToNumOne, |, main.addUsingNumOne.walkToNumOne, |, r
+main.addUsingNumOne.walkToNumOne, &, main.addUsingNumOne.firstOnesComp, &, r
+
+//subtract one from num 1
+main.addUsingNumOne.firstOnesComp, 0, main.addUsingNumOne.firstOnesComp, 1, r
+main.addUsingNumOne.firstOnesComp, 1, main.addUsingNumOne.firstOnesComp, 0, r
+main.addUsingNumOne.firstOnesComp, #, main.addUsingNumOne.subAddOne, #, l
+main.addUsingNumOne.subAddOne, 0, main.addUsingNumOne.subWalkLeft, 1, l
+main.addUsingNumOne.subAddOne, 1, main.addUsingNumOne.subAddOne, 0, l
+main.addUsingNumOne.subAddOne, &, main.addUsingNumOne.subWalkLeft, &, l
+main.addUsingNumOne.subWalkLeft, 0, main.addUsingNumOne.subWalkLeft, 0, l
+main.addUsingNumOne.subWalkLeft, 1, main.addUsingNumOne.subWalkLeft, 1, l
+main.addUsingNumOne.subWalkLeft, &, main.addUsingNumOne.secondOnesComp, &, r
+main.addUsingNumOne.secondOnesComp, 0, main.addUsingNumOne.secondOnesComp, 1, r
+main.addUsingNumOne.secondOnesComp, 1, main.addUsingNumOne.secondOnesComp, 0, r
+main.addUsingNumOne.secondOnesComp, #, main.addUsingNumOne.checkIfDone, #, l
+
+//check if done adding num 1 to final num and helper num
+main.addUsingNumOne.checkIfDone, 0, main.addUsingNumOne.checkIfDone, 0, l
+main.addUsingNumOne.checkIfDone, 1, main.addUsingNumOne.reset, 1, l
+main.addUsingNumOne.checkIfDone, &, main.addUsingNumOne.walkToNumTwo, &, r
+main.addUsingNumOne.reset, 0, main.addUsingNumOne.reset, 0, l
+main.addUsingNumOne.reset, 1, main.addUsingNumOne.reset, 1, l
+main.addUsingNumOne.reset, &, main.addUsingNumOne.helperWalkLeft, &, l
+
+//******************************************************************************
+//subtract 1 from num 2
+//******************************************************************************
+
+//walk to num 2
+main.addUsingNumOne.walkToNumTwo, 0, main.addUsingNumOne.walkToNumTwo, 0, r
+main.addUsingNumOne.walkToNumTwo, 1, main.addUsingNumOne.walkToNumTwo, 1, r
+main.addUsingNumOne.walkToNumTwo, #, main.addUsingNumOne.numTwoFirstOnesComp, #, r
+
+//subtract one from num 2
+main.addUsingNumOne.numTwoFirstOnesComp, 0, main.addUsingNumOne.numTwoFirstOnesComp, 1, r
+main.addUsingNumOne.numTwoFirstOnesComp, 1, main.addUsingNumOne.numTwoFirstOnesComp, 0, r
+main.addUsingNumOne.numTwoFirstOnesComp, b, main.addUsingNumOne.numTwoSubAddOne, b, l
+main.addUsingNumOne.numTwoSubAddOne, 0, main.addUsingNumOne.numTwoSubWalkLeft, 1, l
+main.addUsingNumOne.numTwoSubAddOne, 1, main.addUsingNumOne.numTwoSubAddOne, 0, l
+main.addUsingNumOne.numTwoSubAddOne, #, main.addUsingNumOne.numTwoSecondOnesComp, #, r
+main.addUsingNumOne.numTwoSubWalkLeft, 0, main.addUsingNumOne.numTwoSubWalkLeft, 0, l
+main.addUsingNumOne.numTwoSubWalkLeft, 1, main.addUsingNumOne.numTwoSubWalkLeft, 1, l
+main.addUsingNumOne.numTwoSubWalkLeft, #, main.addUsingNumOne.numTwoSecondOnesComp, #, r
+main.addUsingNumOne.numTwoSecondOnesComp, 0, main.addUsingNumOne.numTwoSecondOnesComp, 1, r
+main.addUsingNumOne.numTwoSecondOnesComp, 1, main.addUsingNumOne.numTwoSecondOnesComp, 0, r
+main.addUsingNumOne.numTwoSecondOnesComp, b, main.addUsingNumOne.checkIfNumTwoIsZero, b, l
+
+//******************************************************************************
+//check if num 2 is 0 and, if so, we are done
+//******************************************************************************
+
+//check if num 2 is 0
+main.addUsingNumOne.checkIfNumTwoIsZero, 0, main.addUsingNumOne.checkIfNumTwoIsZero, 0, l
+main.addUsingNumOne.checkIfNumTwoIsZero, 1, main.addUsingNumOne.walkBalkToHelper, 1, l
+main.addUsingNumOne.checkIfNumTwoIsZero, #, done, #, l
+
+//walk to helper if not done
+main.addUsingNumOne.walkBalkToHelper, 0, main.addUsingNumOne.walkBalkToHelper, 0, l
+main.addUsingNumOne.walkBalkToHelper, 1, main.addUsingNumOne.walkBalkToHelper, 1, l
+main.addUsingNumOne.walkBalkToHelper, #, main.addUsingNumOne.walkBalkToHelper, #, l
+main.addUsingNumOne.walkBalkToHelper, &, main.addUsingHelper.checkIfDone, &, l

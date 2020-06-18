@@ -1,0 +1,46 @@
+//initial state
+initialCheckWalk
+//blank character
+b
+
+//check to see if the second num is already 0 before proceeding
+initialCheckWalk, 0, initialCheckWalk, 0, r
+initialCheckWalk, 1, initialCheckWalk, 1, r
+initialCheckWalk, #, initialCheckWalk, #, r
+initialCheckWalk, b, checkIfDone, b, l
+
+//add 1 to the first num
+addWalkRight, 0, addWalkRight, 0, r
+addWalkRight, 1, addWalkRight, 1, r
+addWalkRight, #, addWalkLeft, #, l
+addWalkLeft, 0, getToSecondNum, 1, r
+addWalkLeft, 1, addWalkLeft, 0, l
+addWalkLeft, b, getToSecondNum, 1, r
+
+//get to the beginning of the second num
+getToSecondNum, 0, getToSecondNum, 0, r
+getToSecondNum, 1, getToSecondNum, 1, r
+getToSecondNum, #, firstOnesComp, #, r
+
+//subtract one from the second num
+firstOnesComp, 0, firstOnesComp, 1, r
+firstOnesComp, 1, firstOnesComp, 0, r
+firstOnesComp, b, subAddOne, b, l
+subAddOne, 0, subWalkLeft, 1, l
+subAddOne, 1, subAddOne, 0, l
+subAddOne, #, subWalkLeft, #, l
+subWalkLeft, 0, subWalkLeft, 0, l
+subWalkLeft, 1, subWalkLeft, 1, l
+subWalkLeft, #, secondOnesComp, #, r
+secondOnesComp, 0, secondOnesComp, 1, r
+secondOnesComp, 1, secondOnesComp, 0, r
+secondOnesComp, b, checkIfDone, b, l
+
+//check to see if the second num is zero. If so, we are done! Otherwise, repeat the procedure
+checkIfDone, 0, checkIfDone, 0, l
+checkIfDone, 1, reset, 1, l
+checkIfDone, #, done, #, r
+reset, 0, reset, 0, l
+reset, 1, reset, 1, l
+reset, #, reset, #, l
+reset, b, addWalkRight, b, r
